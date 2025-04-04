@@ -35,12 +35,12 @@
     </span>
   </button>
 </form>
-<div
-  id="harold-text"
-  class="flex w-full max-w-md items-center gap-4 mb-12 opacity-0 transition-opacity duration-500"
->
-  <p class="text-8xl">🐴</p>
-  <div id="chat-bubble" class="flex items-center w-full">
+<div class="flex w-full max-w-md items-center gap-4 mb-12">
+  <p class="text-8xl -scale-x-100">🐴</p>
+  <div
+    id="chat-bubble"
+    class="flex items-center w-full opacity-0 transition-opacity duration-500"
+  >
     <div
       class="h-0 w-0 z-10 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-r-[12px] border-r-secondary"
     >
@@ -57,8 +57,8 @@
   const form = document.getElementById("ask-form") as HTMLFormElement;
   const textarea = document.getElementById("prompt") as HTMLTextAreaElement;
   const response = document.getElementById("response") as HTMLDivElement;
-  const haroldText = document.getElementById(
-    "harold-text"
+  const chatBubble = document.getElementById(
+    "chat-bubble"
   ) as HTMLParagraphElement;
   const submitButton = document.getElementById(
     "submit-button"
@@ -74,7 +74,7 @@
 
   function showValidationMessage(message: string) {
     response.textContent = message;
-    haroldText.classList.remove("opacity-0");
+    chatBubble.classList.remove("opacity-0");
     submitButton.disabled = false;
     buttonText.classList.remove("hidden");
     buttonSpinner.classList.add("hidden");
@@ -98,7 +98,7 @@
     buttonText.classList.add("hidden");
     buttonSpinner.classList.remove("hidden");
     response.textContent = "";
-    haroldText.classList.add("opacity-0");
+    chatBubble.classList.add("opacity-0");
 
     try {
       const res = await fetch("/api/ask.json", {
@@ -116,10 +116,10 @@
       const data = await res.json();
       response.textContent = data.response;
 
-      haroldText.classList.remove("opacity-0");
+      chatBubble.classList.remove("opacity-0");
     } catch (error: any) {
       response.textContent = "*neighs in Error* " + error.message;
-      haroldText.classList.remove("opacity-0");
+      chatBubble.classList.remove("opacity-0");
     } finally {
       submitButton.disabled = false;
       buttonText.classList.remove("hidden");
