@@ -1,16 +1,63 @@
 ---
-
+import "../index.css";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <main>
+      <h1 class="text-4xl">Harry the Horse</h1>
+      <form id="ask-form">
+        <textarea
+          id="prompt"
+          name="prompt"
+          rows="4"
+          cols="50"
+					class="textarea"
+          placeholder="Ask Harry something..."></textarea>
+        <br />
+        <button class="btn" type="submit">Submit</button>
+      </form>
+      <div id="response" class="mt-4"></div>
+
+      <script>
+        const form = document.getElementById("ask-form");
+        const responseDiv = document.getElementById(
+          "response"
+        ) as HTMLDivElement;
+
+        form?.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const prompt = (
+            document.getElementById("prompt") as HTMLTextAreaElement
+          )?.value;
+
+          try {
+            const res = await fetch("/api/ask.json", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ prompt }),
+            });
+
+            if (!res.ok) {
+              throw new Error("Failed to fetch response from API");
+            }
+
+            const data = await res.json();
+            responseDiv.textContent = data.response;
+          } catch (error: any) {
+            responseDiv.textContent = "Error: " + error.message;
+          }
+        });
+      </script>
+    </main>
+  </body>
 </html>
