@@ -110,7 +110,7 @@
       });
 
       if (!res.ok) {
-        throw new Error("Failed to fetch response from API");
+        throw new Error("Looks like there ain't no hay in the barn");
       }
 
       const data = await res.json();
@@ -118,7 +118,7 @@
 
       haroldText.classList.remove("opacity-0");
     } catch (error: any) {
-      response.textContent = "Error: " + error.message;
+      response.textContent = "*neighs in Error* " + error.message;
       haroldText.classList.remove("opacity-0");
     } finally {
       submitButton.disabled = false;

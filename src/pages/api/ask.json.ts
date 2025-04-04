@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         { role: "user", content: openaiListOfIdioms },
         { role: "user", content: prompt },
       ],
-      max_tokens: 100,
+      max_tokens: 50,
     });
 
     const message = completion.choices[0].message?.content;
