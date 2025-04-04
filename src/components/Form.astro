@@ -7,6 +7,13 @@
     class="textarea w-full p-4 pr-16 resize-none text-lg rounded-xl"
     placeholder="Ask me a question..."></textarea>
   <button
+    id="clear-button"
+    class="btn btn-xs absolute top-4 right-4 hidden"
+    type="button"
+  >
+    Clear
+  </button>
+  <button
     id="submit-button"
     class="btn btn-primary absolute bottom-4 right-4"
     type="submit"
@@ -67,6 +74,9 @@
   const buttonSpinner = document.getElementById(
     "button-spinner"
   ) as HTMLSpanElement;
+  const clearButton = document.getElementById(
+    "clear-button"
+  ) as HTMLButtonElement;
 
   window.addEventListener("DOMContentLoaded", () => {
     textarea?.focus();
@@ -79,6 +89,19 @@
     buttonText.classList.remove("hidden");
     buttonSpinner.classList.add("hidden");
   }
+
+  textarea?.addEventListener("input", () => {
+    if (textarea.value.trim() !== "") {
+      clearButton.classList.remove("hidden");
+    } else {
+      clearButton.classList.add("hidden");
+    }
+  });
+
+  clearButton?.addEventListener("click", () => {
+    textarea.value = "";
+    clearButton.classList.add("hidden");
+  });
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
