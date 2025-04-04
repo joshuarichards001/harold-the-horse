@@ -49,6 +49,11 @@
 <script>
   const form = document.getElementById("ask-form");
   const textarea = document.getElementById("prompt");
+
+  window.addEventListener("DOMContentLoaded", () => {
+    textarea?.focus();
+  });
+  
   const response = document.getElementById("response") as HTMLDivElement;
   const horse = document.getElementById("horse") as HTMLParagraphElement;
   const submitButton = document.getElementById(
