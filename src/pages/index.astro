@@ -39,6 +39,7 @@ import "../index.css";
 
       <script>
         const form = document.getElementById("ask-form");
+        const textarea = document.getElementById("prompt");
         const response = document.getElementById("response") as HTMLDivElement;
 
         form?.addEventListener("submit", async (event) => {
@@ -64,6 +65,13 @@ import "../index.css";
             response.textContent = data.response;
           } catch (error: any) {
             response.textContent = "Error: " + error.message;
+          }
+        });
+
+        textarea?.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            form?.dispatchEvent(new Event("submit", { cancelable: true }));
           }
         });
       </script>
