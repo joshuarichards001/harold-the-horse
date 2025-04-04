@@ -54,13 +54,8 @@
 </div>
 
 <script>
-  const form = document.getElementById("ask-form");
-  const textarea = document.getElementById("prompt");
-
-  window.addEventListener("DOMContentLoaded", () => {
-    textarea?.focus();
-  });
-
+  const form = document.getElementById("ask-form") as HTMLFormElement;
+  const textarea = document.getElementById("prompt") as HTMLTextAreaElement;
   const response = document.getElementById("response") as HTMLDivElement;
   const haroldText = document.getElementById(
     "harold-text"
@@ -73,10 +68,31 @@
     "button-spinner"
   ) as HTMLSpanElement;
 
+  window.addEventListener("DOMContentLoaded", () => {
+    textarea?.focus();
+  });
+
+  function showValidationMessage(message: string) {
+    response.textContent = message;
+    haroldText.classList.remove("opacity-0");
+    submitButton.disabled = false;
+    buttonText.classList.remove("hidden");
+    buttonSpinner.classList.add("hidden");
+  }
+
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const prompt = (document.getElementById("prompt") as HTMLTextAreaElement)
-      ?.value;
+    const prompt = textarea?.value;
+
+    if (!prompt || prompt.trim() === "") {
+      showValidationMessage("*neigh* Hello? Are you there?");
+      return;
+    }
+
+    if (prompt.length > 1000) {
+      showValidationMessage("*neigh* Woah there! That's way to many words");
+      return;
+    }
 
     submitButton.disabled = true;
     buttonText.classList.add("hidden");
@@ -103,6 +119,7 @@
       haroldText.classList.remove("opacity-0");
     } catch (error: any) {
       response.textContent = "Error: " + error.message;
+      haroldText.classList.remove("opacity-0");
     } finally {
       submitButton.disabled = false;
       buttonText.classList.remove("hidden");

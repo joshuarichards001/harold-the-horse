@@ -9,11 +9,26 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // @ts-ignore
   const openaiListOfIdioms = locals.runtime.env.OPENAI_LIST_OF_IDIOMS;
 
-  const body = await request.json();
+  let body;
+  try {
+    body = await request.json();
+  } catch (e) {
+    return new Response("Invalid JSON", { status: 400 });
+  }
+
   const prompt = body.prompt;
+
+  if (!prompt || typeof prompt !== "string") {
+    return new Response("Valid prompt is required", { status: 400 });
+  }
+
+  if (prompt.length > 1000) {
+    return new Response("Prompt is too long", { status: 400 });
+  }
 
   const client = new OpenAI({
     apiKey: openaiApiKey,
+    timeout: 5000,
   });
 
   try {
