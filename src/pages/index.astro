@@ -8,7 +8,15 @@ import "../index.css";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <script
+      defer
+      data-domain="haroldthehorse.com"
+      src="https://plausible.io/js/script.js"></script>
     <title>Astro</title>
+    <meta
+      name="description"
+      content="Tell Harold something to the best horse idiom you've ever heard."
+    />
   </head>
   <body>
     <main>
@@ -19,7 +27,7 @@ import "../index.css";
           name="prompt"
           rows="4"
           cols="50"
-					class="textarea"
+          class="textarea"
           placeholder="Ask Harry something..."></textarea>
         <br />
         <button class="btn" type="submit">Submit</button>
@@ -28,9 +36,7 @@ import "../index.css";
 
       <script>
         const form = document.getElementById("ask-form");
-        const responseDiv = document.getElementById(
-          "response"
-        ) as HTMLDivElement;
+        const response = document.getElementById("response") as HTMLDivElement;
 
         form?.addEventListener("submit", async (event) => {
           event.preventDefault();
@@ -52,9 +58,9 @@ import "../index.css";
             }
 
             const data = await res.json();
-            responseDiv.textContent = data.response;
+            response.textContent = data.response;
           } catch (error: any) {
-            responseDiv.textContent = "Error: " + error.message;
+            response.textContent = "Error: " + error.message;
           }
         });
       </script>
