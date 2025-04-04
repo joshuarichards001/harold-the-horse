@@ -36,14 +36,21 @@
   </button>
 </form>
 <div class="flex w-full max-w-md gap-4">
-  <p class="text-8xl">🐴</p>
-  <div id="response" class="p-4 w-full textarea shadow-lg rounded-xl"></div>
+  <p id="horse" class="text-8xl opacity-0 transition-opacity duration-500">
+    🐴
+  </p>
+  <div
+    id="response"
+    class="p-4 w-full textarea shadow-lg rounded-xl opacity-0 transition-opacity duration-500"
+  >
+  </div>
 </div>
 
 <script>
   const form = document.getElementById("ask-form");
   const textarea = document.getElementById("prompt");
   const response = document.getElementById("response") as HTMLDivElement;
+  const horse = document.getElementById("horse") as HTMLParagraphElement;
   const submitButton = document.getElementById(
     "submit-button"
   ) as HTMLButtonElement;
@@ -61,7 +68,8 @@
     buttonText.classList.add("hidden");
     buttonSpinner.classList.remove("hidden");
     response.textContent = "";
-    response.classList.remove("hidden");
+    horse.classList.add("opacity-0");
+    response.classList.add("opacity-0");
 
     try {
       const res = await fetch("/api/ask.json", {
@@ -78,6 +86,9 @@
 
       const data = await res.json();
       response.textContent = data.response;
+
+      horse.classList.remove("opacity-0");
+      response.classList.remove("opacity-0");
     } catch (error: any) {
       response.textContent = "Error: " + error.message;
     } finally {
