@@ -12,25 +12,28 @@ import "../index.css";
       defer
       data-domain="haroldthehorse.com"
       src="https://plausible.io/js/script.js"></script>
-    <title>Astro</title>
+    <title>Harold the Horse</title>
     <meta
       name="description"
-      content="Tell Harold something to the best horse idiom you've ever heard."
+      content="Harold is a horse therapist. He fills his answers with love and horse idioms."
     />
   </head>
   <body>
-    <main>
-      <h1 class="text-4xl">Harry the Horse</h1>
-      <form id="ask-form">
+    <main
+      class="flex flex-col items-center justify-center min-h-screen bg-gray-200"
+    >
+      <h1 class="text-4xl mb-4">Harold the Horse 🐴</h1>
+      <form id="ask-form" class="relative w-full max-w-md">
         <textarea
           id="prompt"
           name="prompt"
           rows="4"
           cols="50"
-          class="textarea"
-          placeholder="Ask Harry something..."></textarea>
-        <br />
-        <button class="btn" type="submit">Submit</button>
+          class="textarea w-full p-4 pr-16 resize-none"
+          placeholder="Let me know your problems..."></textarea>
+        <button class="btn btn-primary absolute bottom-2 right-2" type="submit"
+          >Submit</button
+        >
       </form>
       <div id="response" class="mt-4"></div>
 
