@@ -1,10 +1,13 @@
 import type { APIRoute } from "astro";
 import { OpenAI } from "openai";
 
-export const POST: APIRoute = async ({ request }) => {
-  const openaiApiKey = import.meta.env.OPENAI_API_KEY;
-  const openaiSystemPrompt = import.meta.env.OPENAI_SYSTEM_PROMPT;
-  const openaiListOfIdioms = import.meta.env.OPENAI_LIST_OF_IDIOMS;
+export const POST: APIRoute = async ({ request, locals }) => {
+  // @ts-ignore
+  const openaiApiKey = locals.runtime.env.OPENAI_API_KEY;
+  // @ts-ignore
+  const openaiSystemPrompt = locals.runtime.env.OPENAI_SYSTEM_PROMPT;
+  // @ts-ignore
+  const openaiListOfIdioms = locals.runtime.env.OPENAI_LIST_OF_IDIOMS;
 
   const body = await request.json();
   const prompt = body.prompt;
