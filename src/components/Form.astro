@@ -35,14 +35,21 @@
     </span>
   </button>
 </form>
-<div class="flex w-full max-w-md gap-4">
-  <p id="horse" class="text-8xl opacity-0 transition-opacity duration-500">
-    🐴
-  </p>
-  <div
-    id="response"
-    class="p-4 w-full textarea shadow-lg rounded-xl opacity-0 transition-opacity duration-500"
-  >
+<div
+  id="harold-text"
+  class="flex w-full max-w-md items-center gap-4 mb-12 opacity-0 transition-opacity duration-500"
+>
+  <p class="text-8xl">🐴</p>
+  <div id="chat-bubble" class="flex items-center w-full">
+    <div
+      class="h-0 w-0 border-t-[20px] border-t-transparent border-b-[20px] border-b-transparent border-r-[20px] border-r-base-100"
+    >
+    </div>
+    <div
+      id="response"
+      class="p-4 w-full bg-base-100 rounded-xl"
+    >
+    </div>
   </div>
 </div>
 
@@ -53,9 +60,11 @@
   window.addEventListener("DOMContentLoaded", () => {
     textarea?.focus();
   });
-  
+
   const response = document.getElementById("response") as HTMLDivElement;
-  const horse = document.getElementById("horse") as HTMLParagraphElement;
+  const haroldText = document.getElementById(
+    "harold-text"
+  ) as HTMLParagraphElement;
   const submitButton = document.getElementById(
     "submit-button"
   ) as HTMLButtonElement;
@@ -73,8 +82,7 @@
     buttonText.classList.add("hidden");
     buttonSpinner.classList.remove("hidden");
     response.textContent = "";
-    horse.classList.add("opacity-0");
-    response.classList.add("opacity-0");
+    haroldText.classList.add("opacity-0");
 
     try {
       const res = await fetch("/api/ask.json", {
@@ -92,8 +100,7 @@
       const data = await res.json();
       response.textContent = data.response;
 
-      horse.classList.remove("opacity-0");
-      response.classList.remove("opacity-0");
+      haroldText.classList.remove("opacity-0");
     } catch (error: any) {
       response.textContent = "Error: " + error.message;
     } finally {
