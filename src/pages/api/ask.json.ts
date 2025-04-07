@@ -1,3 +1,4 @@
+import { createClient } from "@supabase/supabase-js";
 import type { APIRoute } from "astro";
 import { OpenAI } from "openai";
 
@@ -10,6 +11,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const openaiAltSystemPrompt = locals.runtime.env.OPENAI_ALT_SYSTEM_PROMPT;
   // @ts-ignore
   const openaiListOfIdioms = locals.runtime.env.OPENAI_LIST_OF_IDIOMS;
+
+  // @ts-ignore
+  const supabaseUrl = locals.runtime.env.SUPABASE_URL;
+  // @ts-ignore
+  const supabaseKey = locals.runtime.env.SUPABASE_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   let body;
   try {
@@ -49,6 +56,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   });
 
   try {
+    const startTime = Date.now();
+
     const completion = await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: context,
@@ -56,6 +65,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
 
     const response = completion.choices[0].message?.content;
+    const responseTime = Date.now() - startTime;
+    const tokenUsage = completion.usage?.total_tokens || 0;
+
+    const { error } = await supabase.from("metrics").insert([
+      {
+        prompt,
+        response,
+        context: usePrimaryContext ? "primary" : "secondary",
+        response_time: responseTime,
+        token_usage: tokenUsage,
+      },
+    ]);
+
+    if (error) {
+      console.error("Error inserting into Supabase:", error);
+      return new Response("Error inserting into Supabase", { status: 500 });
+    }
 
     return new Response(
       JSON.stringify({
