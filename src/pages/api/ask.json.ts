@@ -24,7 +24,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response("Valid prompt is required", { status: 400 });
   }
 
-  if (prompt.length > 1000) {
+  if (prompt.length > 500) {
     return new Response("Prompt is too long", { status: 400 });
   }
 
