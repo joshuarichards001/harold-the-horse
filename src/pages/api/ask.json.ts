@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     { role: "user", content: prompt },
   ];
 
-  const usePrimaryContext = Math.random() > 0.1;
+  const usePrimaryContext = Math.random() > 0.05;
 
   const context: any = usePrimaryContext ? primaryContext : secondaryContext;
 
