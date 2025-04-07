@@ -7,6 +7,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // @ts-ignore
   const openaiSystemPrompt = locals.runtime.env.OPENAI_SYSTEM_PROMPT;
   // @ts-ignore
+  const openaiAltSystemPrompt = locals.runtime.env.OPENAI_ALT_SYSTEM_PROMPT;
+  // @ts-ignore
   const openaiListOfIdioms = locals.runtime.env.OPENAI_LIST_OF_IDIOMS;
 
   let body;
@@ -26,6 +28,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response("Prompt is too long", { status: 400 });
   }
 
+  const primaryContext = [
+    { role: "system", content: openaiSystemPrompt },
+    { role: "user", content: openaiListOfIdioms },
+    { role: "user", content: prompt },
+  ];
+
+  const secondaryContext = [
+    { role: "system", content: openaiAltSystemPrompt },
+    { role: "user", content: prompt },
+  ];
+
+  const usePrimaryContext = Math.random() > 0.5;
+
+  const context: any = usePrimaryContext ? primaryContext : secondaryContext;
+
   const client = new OpenAI({
     apiKey: openaiApiKey,
     timeout: 5000,
@@ -34,11 +51,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const completion = await client.chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: openaiSystemPrompt },
-        { role: "user", content: openaiListOfIdioms },
-        { role: "user", content: prompt },
-      ],
+      messages: context,
       max_tokens: 40,
     });
 
