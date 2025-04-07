@@ -49,8 +49,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
   });
 
   try {
-    const startTime = Date.now();
-
     const completion = await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: context,
@@ -58,21 +56,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
 
     const response = completion.choices[0].message?.content;
-    const responseTime = Date.now() - startTime;
-    const tokenUsage = completion.usage?.total_tokens || 0;
-
-    // @ts-ignore
-    await locals.runtime.env.AI_METRICS.put(
-      `metric_${Date.now()}`,
-      JSON.stringify({
-        prompt,
-        response,
-        context: usePrimaryContext ? "primary" : "secondary",
-        responseTime,
-        tokenUsage,
-        timestamp: new Date().toISOString(),
-      })
-    );
 
     return new Response(
       JSON.stringify({

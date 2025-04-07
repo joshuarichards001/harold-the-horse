@@ -12,7 +12,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  adapter: cloudflare({
-    sessionKVBindingName: "AI_METRICS"
-  }),
+  adapter: cloudflare(),
 });
