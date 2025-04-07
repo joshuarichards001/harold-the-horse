@@ -55,11 +55,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
       max_tokens: 40,
     });
 
-    const message = completion.choices[0].message?.content;
+    const response = completion.choices[0].message?.content;
+
+    // @ts-ignore
+    await locals.runtime.env.AI_METRICS.put(
+      `metric_${new Date().toISOString()}`,
+      JSON.stringify({
+        prompt,
+        response,
+      })
+    );
 
     return new Response(
       JSON.stringify({
-        response: message,
+        response,
       })
     );
   } catch (error) {
