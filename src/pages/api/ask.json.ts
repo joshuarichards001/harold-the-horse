@@ -2,6 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 import type { APIRoute } from "astro";
 import { OpenAI } from "openai";
 
+function sanitizeInput(input: string): string {
+  return input.replace(/[<>\"'`;(){}]/g, "");
+}
+
 export const POST: APIRoute = async ({ request, locals }) => {
   // @ts-ignore
   const openaiApiKey = locals.runtime.env.OPENAI_API_KEY;
@@ -34,6 +38,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   if (prompt.length > 500) {
     return new Response("Prompt is too long", { status: 400 });
   }
+
+  const sanitizedPrompt = sanitizeInput(prompt);
 
   const primaryContext = [
     { role: "system", content: openaiSystemPrompt },
@@ -70,7 +76,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const { error } = await supabase.from("metrics").insert([
       {
-        prompt,
+        prompt: sanitizedPrompt,
         response,
         context: usePrimaryContext ? "primary" : "secondary",
         response_time: responseTime,
